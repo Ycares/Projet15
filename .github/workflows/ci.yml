@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          tools: composer, phpstan
+
+      - name: Installation
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Exécution des tests
+        run: php bin/phpunit
+
+      - name: Analyse statique
+        run: phpstan analyse src tests
